@@ -4,12 +4,15 @@
  * and open the template in the editor.
  */
 package model;
+
 import collections.StudentList;
+
 /**
  *
  * @author DANH NGUYEN
  */
 public class StastiticalInfo {
+
     String mountainCode;
     int participant;
     double totalTuitionFee;
@@ -46,7 +49,7 @@ public class StastiticalInfo {
     public void setTotalTuitionFee(double totalTuitionFee) {
         this.totalTuitionFee = totalTuitionFee;
     }
-    
+
     @Override
     public String toString() {
         return String.format(" MT%-7s| %-23d| %-13s", mountainCode, participant, StudentList.addCommaToTuitionFee(totalTuitionFee));

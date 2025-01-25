@@ -34,26 +34,26 @@ public class Menu {
         System.out.println("---------------------------------------------------------------------------------------------------------");
 
     }
-    
-     public static void displaySearchingListBar() {
+
+    public static void displaySearchingListBar() {
         System.out.println("---------------------------------------------------------------------------------------------------------");
-        System.out.println("Student ID  | Name                  | Email             | Phone      | Peak Code");
+        System.out.println("Student ID  | Name                  | Email                       | Phone      | Peak Code");
         System.out.println("---------------------------------------------------------------------------------------------------------");
 
     }
-     
-      public static void displayFilterBar() {
+
+    public static void displayFilterBar() {
         System.out.println("----------------------------------------------------------------------------------------------------------");
-        System.out.println("Student ID  | Name                  | Email             | Phone      | Peak Code| Tuition Fee");
+        System.out.println("Student ID  | Name                  | Email                       | Phone      | Peak Code| Tuition Fee");
         System.out.println("----------------------------------------------------------------------------------------------------------");
 
     }
-      
-      public static void displayStastisticBar() {
-          System.out.println("----------------------------------------------------------------------------------------------------------");
+
+    public static void displayStastisticBar() {
+        System.out.println("----------------------------------------------------------------------------------------------------------");
         System.out.println("PeakName  | Number of participants | Total cost   ");
         System.out.println("----------------------------------------------------------------------------------------------------------");
-      }
+    }
 
     public static void DisplayBarLine() {
         System.out.println("----------------------------------------------------------------------------------------------------------");

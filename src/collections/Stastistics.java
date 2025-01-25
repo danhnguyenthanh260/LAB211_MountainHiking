@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import model.Student;
 import model.StastiticalInfo;
-import collections.StudentList;
-import java.util.ArrayList;
 
 /**
  *
@@ -27,16 +25,8 @@ import java.util.ArrayList;
  */
 public class Stastistics extends HashMap<String, StastiticalInfo> {
 
-    public Stastistics() {
-        super();
-    }
-
-    public Stastistics(List<Student> s) {
-        super();
-        statisticalize(s);
-    }
-
-    public final void statisticalize(List<Student> s) {
+    public void statisticalize(List<Student> s) {
+        this.clear();
         for (Student student : s) {
             double tuitionFee = StudentList.deleteCommaToTuitionFee(student.getTuitionFee());
             if (this.containsKey(student.getMountainCode())) {

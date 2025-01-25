@@ -5,7 +5,6 @@
  */
 package collections;
 
-import java.util.*;
 import model.Mountain;
 
 /**
@@ -15,6 +14,10 @@ import model.Mountain;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class MountainList {
 
@@ -42,7 +45,7 @@ public class MountainList {
 
     public static void loadFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader("src/data/MountainList.csv"))) {
-            String line = br.readLine(); // Đọc tiêu đề
+            String line = br.readLine();
             while ((line = br.readLine()) != null) {
                 Mountain mountain = dataToObject(line);
                 if (mountain != null) {

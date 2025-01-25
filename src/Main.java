@@ -3,7 +3,6 @@ import collections.MountainList;
 import collections.StudentList;
 import java.util.Scanner;
 import menu.Menu;
-import collections.Stastistics;
 
 
 /*
@@ -20,10 +19,9 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int choice;
-       
         StudentList.readFromFile();
         MountainList.loadFromFile();
-        Stastistics stastistics = new Stastistics(StudentList.students);
+
         do {
             Menu.printMainMenu();
             choice = scanner.nextInt();
@@ -47,7 +45,7 @@ public class Main {
                     StudentList.filterDataByCampus();
                     break;
                 case 7:
-                    stastistics.show();
+                    StudentList.showStatistics();
                     break;
                 case 8:
                     StudentList.writeToFile();

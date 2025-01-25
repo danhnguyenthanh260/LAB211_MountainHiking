@@ -10,6 +10,7 @@ import java.util.Scanner;
 import java.util.UUID;
 import menu.Menu;
 import collections.MountainList;
+import java.util.InputMismatchException;
 
 /**
  *
@@ -22,6 +23,7 @@ public class Inputter {
     public static String getStudentCampus() {
         Scanner scanner = new Scanner(System.in);
         String campusName = "";
+
         while (true) {
             Menu.DisplayBarLine();
             System.out.println("Campus:");
@@ -29,25 +31,40 @@ public class Inputter {
                     + "2. Sai gon: SE\n"
                     + "3. Da Nang: DE\n"
                     + "4. Quy Nhon: QE\n"
-                    + "5. Can Tho: CE");
+                    + "5. Can Tho: CE\n");
             Menu.DisplayBarLine();
-            System.out.print("Enter a campus code (HE ,SE ,DE ,QE ,CE): ");
-            campusName = scanner.nextLine();
-            if (campusName.equalsIgnoreCase("HE")) {
-                return campusName;
-            } else if (campusName.equalsIgnoreCase("SE")) {
-                return campusName;
-            } else if (campusName.equalsIgnoreCase("DE")) {
-                return campusName;
-            } else if (campusName.equalsIgnoreCase("QE")) {
-                return campusName;
-            } else if (campusName.equalsIgnoreCase("CE")) {
-                return campusName;
-            } else {
-                System.out.println("Invalid campus!!");
-                System.out.println("Please enter again!");
+            System.out.print("Choose your campus (1.HE-2.SE-3.DE-4.QE-5.CE): ");
+
+            try {
+                int choice = scanner.nextInt();
+                switch (choice) {
+                    case 1:
+                        campusName = "HE";
+                        break;
+                    case 2:
+                        campusName = "SE";
+                        break;
+                    case 3:
+                        campusName = "DE";
+                        break;
+                    case 4:
+                        campusName = "QE";
+                        break;
+                    case 5:
+                        campusName = "CE";
+                        break;
+                    default:
+                        System.out.println("Invalid campus!!");
+                        continue;
+                }
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid campus! Choose a number");
+                scanner.next();
             }
+
         }
+        return campusName;
     }
 
     public static String getstudentId() {
@@ -55,9 +72,9 @@ public class Inputter {
 
         String id = UUID.randomUUID().toString().replaceAll("[^0-9]", "");
         String uniqueId = id.substring(0, 6);
-
-        System.out.println(campusName
-                + uniqueId);
+     
+        System.out.print("Student ID: ");
+        System.out.println(campusName + uniqueId);
         return campusName + uniqueId;
     }
 
@@ -66,12 +83,10 @@ public class Inputter {
         String name = "";
         do {
             Scanner sc = new Scanner(System.in);
-            System.out.println("Student name: ");
+            System.out.print("Enter student name: ");
             name = sc.nextLine();
             if (Acceptable.isValid(name, Acceptable.NAME_VALID)) {
                 check = true;
-            } else if (name.equals("")) {
-                break;
             } else {
                 System.out.println("Name must be from(2-20) characters!");
             }
@@ -84,12 +99,10 @@ public class Inputter {
         String phone = "";
         do {
             Scanner sc = new Scanner(System.in);
-            System.out.println("Student phone number: ");
+            System.out.print("Enter student phone number: ");
             phone = sc.nextLine();
             if (Acceptable.isValid(phone, Acceptable.PHONE_VALID)) {
                 check = true;
-            } else if (phone.equals("")) {
-                break;
             } else {
                 System.out.println("INVALID PHONE NUMBER!");
             }
@@ -102,12 +115,10 @@ public class Inputter {
         String email = "";
         do {
             Scanner sc = new Scanner(System.in);
-            System.out.println("Student email: ");
+            System.out.print("Enter student email: ");
             email = sc.nextLine();
             if (Acceptable.isValid(email, Acceptable.EMAIL_VALID)) {
                 check = true;
-            } else if (email.equals("")) {
-                break;
             } else {
                 System.out.println("INVALID EMAIL!!");
             }
@@ -133,7 +144,7 @@ public class Inputter {
         String typeMountainCode = "";
         do {
             Scanner sc = new Scanner(System.in);
-            System.out.println("Mountain Code(1-13): ");
+            System.out.print("Enter mountain Code(1-13): ");
             typeMountainCode = sc.nextLine();
             check = MountainList.isValidMountainCode(typeMountainCode);
             if (check) {

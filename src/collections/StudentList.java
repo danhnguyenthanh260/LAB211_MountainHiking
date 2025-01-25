@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import tools.Inputter;
 import menu.Menu;
+import tools.Acceptable;
 
 /**
  *
@@ -23,6 +24,7 @@ import menu.Menu;
 public class StudentList {
 
     public static ArrayList<Student> students = new ArrayList<>();
+    public static Stastistics stastistics = new Stastistics();
 
     public static boolean isSaved = false;
 
@@ -37,7 +39,8 @@ public class StudentList {
         Student student = new Student(studentId, name, phone,
                 email, mountainCode, tutionFee);
         students.add(student);
-        writeToFile();
+        stastistics.statisticalize(students);
+        isSaved = false;
         System.out.println("Successfully add new student information!");
     }
 
@@ -46,45 +49,68 @@ public class StudentList {
         System.out.println("Enter student ID to update:");
         String findId = scanner.nextLine();
         Student st = findStudentById(findId);
+
         if (st != null) {
-            System.out.println("Do you want to change student name?(if NO press enter)");
-            String updatedName = Inputter.inputName();
-            if (!updatedName.equals("")) {
-                st.setName(updatedName);
-            } else {
-                st.setName(st.getName());
+            while (true) {
+                System.out.print("Do you want to change student name?(if NO press enter)");
+                String updatedName = scanner.nextLine();
+                if (!updatedName.equals("") && Acceptable.isValid(updatedName, Acceptable.NAME_VALID)) {
+                    st.setName(updatedName);
+                    break;
+                } else if (updatedName.equals("")) {
+                    System.out.println("Skipping");
+                    break;
+                } else {
+                    System.out.println("Invalid input!");
+                }
             }
 
-            System.out.println("Do you want to change phone number?(if NO press enter)");
+            while (true) {
+                System.out.print("Do you want to change phone number?(if NO press enter)");
 
-            String updatedPhone = Inputter.inputPhone();
-            if (!updatedPhone.equals("")) {
-                st.setPhone(updatedPhone);
-                String updateTuitionFee = Inputter.getTuitionFee(updatedPhone);
-                st.setTuitionFee(updateTuitionFee);
-            } else {
-                st.setPhone(st.getPhone());
-                st.setTuitionFee(st.getTuitionFee());
+                String updatedPhone = scanner.nextLine();
+                if (!updatedPhone.equals("") && Acceptable.isValid(updatedPhone, Acceptable.PHONE_VALID)) {
+                    st.setPhone(updatedPhone);
+                    String updateTuitionFee = Inputter.getTuitionFee(updatedPhone);
+                    st.setTuitionFee(updateTuitionFee);
+                    break;
+                } else if (updatedPhone.equals("")) {
+                    System.out.println("Skipping");
+                    break;
+                } else {
+                    System.out.println("Invalid input!");
+                }
             }
 
-            System.out.println("Do you want to change email?(if NO press enter)");
-            String updatedEmail = Inputter.inputEmail();
-            if (!updatedEmail.equals("")) {
-                st.setEmail(updatedEmail);
-            } else {
-                st.setEmail(st.getEmail());
+            while (true) {
+                System.out.print("Do you want to change email?(if NO press enter)");
+                String updatedEmail = scanner.nextLine();
+                if (!updatedEmail.equals("") && Acceptable.isValid(updatedEmail, Acceptable.EMAIL_VALID)) {
+                    st.setEmail(updatedEmail);
+                } else if (updatedEmail.equals("")) {
+                    System.out.println("Skipping");
+                    break;
+                } else {
+                    System.out.println("Invalid input!");
+                }
+
             }
 
-            System.out.println("Do you want to change mountain code?(if NO press enter)");
-            String updatedMountainCode
-                    = scanner.nextLine();
-            if (!updatedMountainCode.equals("")) {
-                updatedMountainCode = Inputter.inputMountainCode();
-                st.setMountainCode(updatedMountainCode);
-            } else {
-                st.setMountainCode(st.getMountainCode());
+            while (true) {
+                System.out.print("Do you want to change mountain code?(if NO press enter)");
+                String updatedMountainCode = scanner.nextLine();
+                if (!updatedMountainCode.equals("") && MountainList.isValidMountainCode(updatedMountainCode)) {
+                    st.setMountainCode(updatedMountainCode);
+                    break;
+                } else if (updatedMountainCode.equals("")) {
+                    System.out.println("Skipping");
+                    break;
+                } else {
+                    System.out.println("Invalid input!");
+                }
+                System.out.println("Update student information successfully!!");
             }
-            System.out.println("Update student information successfully!!");
+            stastistics.statisticalize(students);
         } else {
             System.out.println("This student has not registered yet.");
         }
@@ -127,7 +153,7 @@ public class StudentList {
             if (confirmation.equalsIgnoreCase("Y")) {
                 students.remove(st);
                 System.out.println("The registration has been successfully deleted.");
-                writeToFile();
+                stastistics.statisticalize(students);
             } else {
                 System.out.println("Cancel delete success!");
             }
@@ -141,32 +167,56 @@ public class StudentList {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter student name you want to find: ");
         String studentName = sc.nextLine();
-        Student st = findStudentByName(studentName);
-        if (st != null) {
-            if (studentName.equalsIgnoreCase(st.getName())) {
-                Menu.displaySearchingListBar();
-                for (Student student : students) {
-                    if (studentName.equalsIgnoreCase(student.getName())) {
-                        System.out.format("%-11s | %-22s| %-18s| %-11s| MT%s\n", student.getId(), student.getName(), student.getEmail(), student.getPhone(), student.getMountainCode());
-                    }
-                }
-                Menu.DisplayBarLine();
-            } else {
-                System.out.println("No one matches the search criteria!");
+        ArrayList<Student> matchStudents = existStudentByName(studentName.toLowerCase());
+
+        if (!matchStudents.isEmpty()) {
+            Menu.displaySearchingListBar();
+            for (Student student : matchStudents) {
+                System.out.format("%-11s | %-22s| %-28s| %-11s| MT%s\n", student.getId(), student.getName(), student.getEmail(), student.getPhone(), student.getMountainCode());
+            }
+            Menu.DisplayBarLine();
+        } else {
+            System.out.println("No one matches the search criteria!");
+        }
+
+    }
+
+    public static ArrayList<Student> existStudentByName(String studentName) {
+        ArrayList<Student> studentMatchName = new ArrayList<>();
+
+        for (Student student : students) {
+            if (student.getName().toLowerCase().contains(studentName)) {
+                studentMatchName.add(student);
             }
         }
+        return studentMatchName;
     }
 
     public static void filterDataByCampus() {
         String campusName = Inputter.getStudentCampus().toUpperCase();
-        Menu.displayFilterBar();
+        ArrayList<Student> matchStudents = containStudentWithCampus(campusName);
+
+        if (matchStudents.isEmpty()) {
+            System.out.println("No students have registered under this campus.");
+        } else {
+            Menu.displayFilterBar();
+            for (Student student : students) {
+                if (student.getId().startsWith(campusName)) {
+                    System.out.format("%-11s | %-22s| %-28s| %-11s| MT%-7s| %s\n", student.getId(), student.getName(), student.getEmail(), student.getPhone(), student.getMountainCode(), student.getTuitionFee());
+                }
+            }
+            Menu.DisplayBarLine();
+        }
+    }
+
+    public static ArrayList<Student> containStudentWithCampus(String campusName) {
+        ArrayList<Student> studentMatchCampus = new ArrayList<>();
         for (Student student : students) {
             if (student.getId().startsWith(campusName)) {
-                System.out.format("%-11s | %-22s| %-18s| %-11s| MT%-7s| %s\n", student.getId(), student.getName(), student.getEmail(), student.getPhone(), student.getMountainCode(), student.getTuitionFee());
+                studentMatchCampus.add(student);
             }
         }
-        Menu.DisplayBarLine();
-
+        return studentMatchCampus;
     }
 
     public static Student findStudentById(String id) {
@@ -179,15 +229,8 @@ public class StudentList {
         return null;
     }
 
-    public static Student findStudentByName(String studentName) {
-        for (Student student : students) {
-            if (studentName.equalsIgnoreCase(student.getName())) {
-                System.out.println("Your student ID had been found!");
-                return student;
-            }
-        }
-        System.out.println("This student has not registered yet");
-        return null;
+    public static void showStatistics() {
+        stastistics.show();
     }
 
     public static String addCommaToTuitionFee(double tuitionFee) {
@@ -201,11 +244,12 @@ public class StudentList {
     }
 
     public static void writeToFile() {
-        try (FileOutputStream fos = new FileOutputStream("src/data/students.dat");
+        try (FileOutputStream fos = new FileOutputStream("src/data/registration.dat");
                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             isSaved = true;
             oos.writeObject(students);
-            System.out.println("Registration data has been successfully saved to `student.dat`");
+            stastistics.statisticalize(students);
+            System.out.println("Registration data has been successfully saved to `registration.dat`");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -213,10 +257,10 @@ public class StudentList {
 
     public static void readFromFile() {
         try {
-            FileInputStream fileInputStream = new FileInputStream("src/data/students.dat");
+            FileInputStream fileInputStream = new FileInputStream("src/data/registration.dat");
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-
             students = (ArrayList<Student>) objectInputStream.readObject();
+            stastistics.statisticalize(students);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -225,18 +269,20 @@ public class StudentList {
     public static void exitProgram() {
         Scanner sc = new Scanner(System.in);
         while (true) {
-            if (!isSaved) {
-                System.out.println("Do you want to save the changes before exiting? (Y/N)");
+            if (isSaved == false) {
+                System.out.println("You have unsaved changes. Are you sure you want to exit without saving? (Y/N)");
                 String exit = sc.nextLine();
                 if (exit.equalsIgnoreCase("y")) {
                     writeToFile();
                     break;
                 } else if (exit.equalsIgnoreCase("n")) {
-                    System.out.println("Exit program without save successfully!");
+                    System.out.println("Exit program without save to file successfully!");
                     break;
                 } else {
-                    System.out.println("Please enter (Y/N)");
+                    System.out.println("Invalid input! Try (Y/N)");
                 }
+            } else {
+                break;
             }
         }
 
