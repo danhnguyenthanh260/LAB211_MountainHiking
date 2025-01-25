@@ -21,8 +21,8 @@ import java.util.Set;
 
 public class MountainList {
 
-    private static final List<Mountain> mountains = new ArrayList<>();
-    private static final Set<String> mountainCodes = new HashSet<>();
+    private static List<Mountain> mountains = new ArrayList<>();
+    private static Set<String> mountainCodes = new HashSet<>();
 
     public static boolean isValidMountainCode(String mountainCode) {
         return mountainCodes.contains(mountainCode.toUpperCase());
@@ -55,16 +55,6 @@ public class MountainList {
             }
         } catch (IOException e) {
             e.getStackTrace();
-        }
-    }
-
-    public static void display() {
-        if (mountains.isEmpty()) {
-            System.out.println("No mountains available. Please load data first.");
-        } else {
-            for (Mountain mountain : mountains) {
-                System.out.println(mountain);
-            }
         }
     }
 }
