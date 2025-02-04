@@ -226,8 +226,7 @@ public class StudentList {
         for (Student student : students) {
             if (id.equalsIgnoreCase(student.getId())) {
                 System.out.println("Your student ID had been found!");
-                return student;
-                
+                return student;               
             }
         }
         return null;
