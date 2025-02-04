@@ -45,7 +45,7 @@ public class MountainList {
 
     public static void loadFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader("src/data/MountainList.csv"))) {
-            String line = br.readLine();
+            String line;
             while ((line = br.readLine()) != null) {
                 Mountain mountain = dataToObject(line);
                 if (mountain != null) {

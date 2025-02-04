@@ -6,6 +6,7 @@
 package collections;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,7 +27,7 @@ public class StudentList {
     public static ArrayList<Student> students = new ArrayList<>();
     public static Stastistics stastistics = new Stastistics();
 
-    public static boolean isSaved = false;
+    public static boolean isSaved = true;
 
     public static void addNewStudent() {
         String studentId = Inputter.getstudentId();
@@ -111,6 +112,7 @@ public class StudentList {
                 System.out.println("Update student information successfully!!");
             }
             stastistics.statisticalize(students);
+            isSaved = false;
         } else {
             System.out.println("This student has not registered yet.");
         }
@@ -154,6 +156,7 @@ public class StudentList {
                 students.remove(st);
                 System.out.println("The registration has been successfully deleted.");
                 stastistics.statisticalize(students);
+                isSaved = false;
             } else {
                 System.out.println("Cancel delete success!");
             }
@@ -251,7 +254,7 @@ public class StudentList {
             stastistics.statisticalize(students);
             System.out.println("Registration data has been successfully saved to `registration.dat`");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Can not create new file!");
         }
     }
 
@@ -261,8 +264,12 @@ public class StudentList {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             students = (ArrayList<Student>) objectInputStream.readObject();
             stastistics.statisticalize(students);
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: Can not find file 'registration.dat'");
+        } catch (IOException e) {
+            System.out.println("Error to read from file " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error: Can not find class ro read data");
         }
     }
 
@@ -282,6 +289,7 @@ public class StudentList {
                     System.out.println("Invalid input! Try (Y/N)");
                 }
             } else {
+                System.out.println("Exit program successful!");
                 break;
             }
         }
